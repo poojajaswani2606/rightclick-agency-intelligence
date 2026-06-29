@@ -186,7 +186,10 @@
     .tracker-label { background: #fbfbff; font-weight: 900; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: .08em; }
     .week-label strong { display: block; color: var(--ink); font-size: 14px; margin-bottom: 3px; }
     .day-box { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 750; color: var(--ink); }
+    .day-box span { display: grid; gap: 2px; }
+    .day-box small { color: var(--muted); font-size: 11px; font-weight: 800; }
     .day-box input { width: 18px; height: 18px; accent-color: var(--purple); }
+    .tracker-cell.muted-cell { background: #fafbff; color: #a3a8bb; }
     .target-pill { display: inline-flex; justify-content: center; min-width: 58px; border-radius: 999px; padding: 5px 8px; background: var(--purple-soft); color: var(--purple); font-weight: 950; }
     .tracker-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
     .hidden { display: none; }
@@ -260,46 +263,54 @@
 
     const trackerMonths = [
       { id: "2026-06", short: "June", label: "June 2026", weeks: [
-        { id: "w1", label: "Week 1", range: "Jun 1-6" },
-        { id: "w2", label: "Week 2", range: "Jun 8-13" },
-        { id: "w3", label: "Week 3", range: "Jun 15-20" },
-        { id: "w4", label: "Week 4", range: "Jun 22-27" }
+        { id: "w1", label: "Week 1", range: "Jun 1-6", dates: { Mon: "Jun 1", Tue: "Jun 2", Wed: "Jun 3", Thu: "Jun 4", Fri: "Jun 5", Sat: "Jun 6" } },
+        { id: "w2", label: "Week 2", range: "Jun 8-13", dates: { Mon: "Jun 8", Tue: "Jun 9", Wed: "Jun 10", Thu: "Jun 11", Fri: "Jun 12", Sat: "Jun 13" } },
+        { id: "w3", label: "Week 3", range: "Jun 15-20", dates: { Mon: "Jun 15", Tue: "Jun 16", Wed: "Jun 17", Thu: "Jun 18", Fri: "Jun 19", Sat: "Jun 20" } },
+        { id: "w4", label: "Week 4", range: "Jun 22-27", dates: { Mon: "Jun 22", Tue: "Jun 23", Wed: "Jun 24", Thu: "Jun 25", Fri: "Jun 26", Sat: "Jun 27" } },
+        { id: "w5", label: "Week 5", range: "Jun 29-30", dates: { Mon: "Jun 29", Tue: "Jun 30" } }
       ] },
       { id: "2026-07", short: "July", label: "July 2026", weeks: [
-        { id: "w1", label: "Week 1", range: "Jul 1-4" },
-        { id: "w2", label: "Week 2", range: "Jul 6-11" },
-        { id: "w3", label: "Week 3", range: "Jul 13-18" },
-        { id: "w4", label: "Week 4", range: "Jul 20-25" }
+        { id: "w1", label: "Week 1", range: "Jul 1-4", dates: { Wed: "Jul 1", Thu: "Jul 2", Fri: "Jul 3", Sat: "Jul 4" } },
+        { id: "w2", label: "Week 2", range: "Jul 6-11", dates: { Mon: "Jul 6", Tue: "Jul 7", Wed: "Jul 8", Thu: "Jul 9", Fri: "Jul 10", Sat: "Jul 11" } },
+        { id: "w3", label: "Week 3", range: "Jul 13-18", dates: { Mon: "Jul 13", Tue: "Jul 14", Wed: "Jul 15", Thu: "Jul 16", Fri: "Jul 17", Sat: "Jul 18" } },
+        { id: "w4", label: "Week 4", range: "Jul 20-25", dates: { Mon: "Jul 20", Tue: "Jul 21", Wed: "Jul 22", Thu: "Jul 23", Fri: "Jul 24", Sat: "Jul 25" } },
+        { id: "w5", label: "Week 5", range: "Jul 27-31", dates: { Mon: "Jul 27", Tue: "Jul 28", Wed: "Jul 29", Thu: "Jul 30", Fri: "Jul 31" } }
       ] },
       { id: "2026-08", short: "August", label: "August 2026", weeks: [
-        { id: "w1", label: "Week 1", range: "Aug 3-8" },
-        { id: "w2", label: "Week 2", range: "Aug 10-15" },
-        { id: "w3", label: "Week 3", range: "Aug 17-22" },
-        { id: "w4", label: "Week 4", range: "Aug 24-29" }
+        { id: "w1", label: "Week 1", range: "Aug 1", dates: { Sat: "Aug 1" } },
+        { id: "w2", label: "Week 2", range: "Aug 3-8", dates: { Mon: "Aug 3", Tue: "Aug 4", Wed: "Aug 5", Thu: "Aug 6", Fri: "Aug 7", Sat: "Aug 8" } },
+        { id: "w3", label: "Week 3", range: "Aug 10-15", dates: { Mon: "Aug 10", Tue: "Aug 11", Wed: "Aug 12", Thu: "Aug 13", Fri: "Aug 14", Sat: "Aug 15" } },
+        { id: "w4", label: "Week 4", range: "Aug 17-22", dates: { Mon: "Aug 17", Tue: "Aug 18", Wed: "Aug 19", Thu: "Aug 20", Fri: "Aug 21", Sat: "Aug 22" } },
+        { id: "w5", label: "Week 5", range: "Aug 24-29", dates: { Mon: "Aug 24", Tue: "Aug 25", Wed: "Aug 26", Thu: "Aug 27", Fri: "Aug 28", Sat: "Aug 29" } },
+        { id: "w6", label: "Week 6", range: "Aug 31", dates: { Mon: "Aug 31" } }
       ] },
       { id: "2026-09", short: "September", label: "September 2026", weeks: [
-        { id: "w1", label: "Week 1", range: "Sep 1-5" },
-        { id: "w2", label: "Week 2", range: "Sep 7-12" },
-        { id: "w3", label: "Week 3", range: "Sep 14-19" },
-        { id: "w4", label: "Week 4", range: "Sep 21-26" }
+        { id: "w1", label: "Week 1", range: "Sep 1-5", dates: { Tue: "Sep 1", Wed: "Sep 2", Thu: "Sep 3", Fri: "Sep 4", Sat: "Sep 5" } },
+        { id: "w2", label: "Week 2", range: "Sep 7-12", dates: { Mon: "Sep 7", Tue: "Sep 8", Wed: "Sep 9", Thu: "Sep 10", Fri: "Sep 11", Sat: "Sep 12" } },
+        { id: "w3", label: "Week 3", range: "Sep 14-19", dates: { Mon: "Sep 14", Tue: "Sep 15", Wed: "Sep 16", Thu: "Sep 17", Fri: "Sep 18", Sat: "Sep 19" } },
+        { id: "w4", label: "Week 4", range: "Sep 21-26", dates: { Mon: "Sep 21", Tue: "Sep 22", Wed: "Sep 23", Thu: "Sep 24", Fri: "Sep 25", Sat: "Sep 26" } },
+        { id: "w5", label: "Week 5", range: "Sep 28-30", dates: { Mon: "Sep 28", Tue: "Sep 29", Wed: "Sep 30" } }
       ] },
       { id: "2026-10", short: "October", label: "October 2026", weeks: [
-        { id: "w1", label: "Week 1", range: "Oct 1-3" },
-        { id: "w2", label: "Week 2", range: "Oct 5-10" },
-        { id: "w3", label: "Week 3", range: "Oct 12-17" },
-        { id: "w4", label: "Week 4", range: "Oct 19-24" }
+        { id: "w1", label: "Week 1", range: "Oct 1-3", dates: { Thu: "Oct 1", Fri: "Oct 2", Sat: "Oct 3" } },
+        { id: "w2", label: "Week 2", range: "Oct 5-10", dates: { Mon: "Oct 5", Tue: "Oct 6", Wed: "Oct 7", Thu: "Oct 8", Fri: "Oct 9", Sat: "Oct 10" } },
+        { id: "w3", label: "Week 3", range: "Oct 12-17", dates: { Mon: "Oct 12", Tue: "Oct 13", Wed: "Oct 14", Thu: "Oct 15", Fri: "Oct 16", Sat: "Oct 17" } },
+        { id: "w4", label: "Week 4", range: "Oct 19-24", dates: { Mon: "Oct 19", Tue: "Oct 20", Wed: "Oct 21", Thu: "Oct 22", Fri: "Oct 23", Sat: "Oct 24" } },
+        { id: "w5", label: "Week 5", range: "Oct 26-31", dates: { Mon: "Oct 26", Tue: "Oct 27", Wed: "Oct 28", Thu: "Oct 29", Fri: "Oct 30", Sat: "Oct 31" } }
       ] },
       { id: "2026-11", short: "November", label: "November 2026", weeks: [
-        { id: "w1", label: "Week 1", range: "Nov 2-7" },
-        { id: "w2", label: "Week 2", range: "Nov 9-14" },
-        { id: "w3", label: "Week 3", range: "Nov 16-21" },
-        { id: "w4", label: "Week 4", range: "Nov 23-28" }
+        { id: "w1", label: "Week 1", range: "Nov 2-7", dates: { Mon: "Nov 2", Tue: "Nov 3", Wed: "Nov 4", Thu: "Nov 5", Fri: "Nov 6", Sat: "Nov 7" } },
+        { id: "w2", label: "Week 2", range: "Nov 9-14", dates: { Mon: "Nov 9", Tue: "Nov 10", Wed: "Nov 11", Thu: "Nov 12", Fri: "Nov 13", Sat: "Nov 14" } },
+        { id: "w3", label: "Week 3", range: "Nov 16-21", dates: { Mon: "Nov 16", Tue: "Nov 17", Wed: "Nov 18", Thu: "Nov 19", Fri: "Nov 20", Sat: "Nov 21" } },
+        { id: "w4", label: "Week 4", range: "Nov 23-28", dates: { Mon: "Nov 23", Tue: "Nov 24", Wed: "Nov 25", Thu: "Nov 26", Fri: "Nov 27", Sat: "Nov 28" } },
+        { id: "w5", label: "Week 5", range: "Nov 30", dates: { Mon: "Nov 30" } }
       ] },
       { id: "2026-12", short: "December", label: "December 2026", weeks: [
-        { id: "w1", label: "Week 1", range: "Dec 1-5" },
-        { id: "w2", label: "Week 2", range: "Dec 7-12" },
-        { id: "w3", label: "Week 3", range: "Dec 14-19" },
-        { id: "w4", label: "Week 4", range: "Dec 21-26" }
+        { id: "w1", label: "Week 1", range: "Dec 1-5", dates: { Tue: "Dec 1", Wed: "Dec 2", Thu: "Dec 3", Fri: "Dec 4", Sat: "Dec 5" } },
+        { id: "w2", label: "Week 2", range: "Dec 7-12", dates: { Mon: "Dec 7", Tue: "Dec 8", Wed: "Dec 9", Thu: "Dec 10", Fri: "Dec 11", Sat: "Dec 12" } },
+        { id: "w3", label: "Week 3", range: "Dec 14-19", dates: { Mon: "Dec 14", Tue: "Dec 15", Wed: "Dec 16", Thu: "Dec 17", Fri: "Dec 18", Sat: "Dec 19" } },
+        { id: "w4", label: "Week 4", range: "Dec 21-26", dates: { Mon: "Dec 21", Tue: "Dec 22", Wed: "Dec 23", Thu: "Dec 24", Fri: "Dec 25", Sat: "Dec 26" } },
+        { id: "w5", label: "Week 5", range: "Dec 28-31", dates: { Mon: "Dec 28", Tue: "Dec 29", Wed: "Dec 30", Thu: "Dec 31" } }
       ] }
     ];
     let activeTrackerMonth = "2026-06";
@@ -433,11 +444,18 @@
     function isTrackerChecked(clientId, weekId, day) {
       return localStorage.getItem(trackerKey(clientId, weekId, day)) === "1";
     }
+    function hasTrackerDate(week, day) {
+      return Boolean(week.dates && week.dates[day]);
+    }
     function trackerClientDone(client) {
-      return currentTrackerMonth().weeks.reduce((total, week) => total + trackerDays.filter(day => isTrackerChecked(client.id, week.id, day)).length, 0);
+      return currentTrackerMonth().weeks.reduce((total, week) => {
+        return total + trackerDays.filter(day => hasTrackerDate(week, day) && isTrackerChecked(client.id, week.id, day)).length;
+      }, 0);
     }
     function trackerClientTarget(client) {
-      return client.target * currentTrackerMonth().weeks.length;
+      return currentTrackerMonth().weeks.reduce((total, week) => {
+        return total + trackerDays.filter(day => hasTrackerDate(week, day) && client.days.includes(day)).length;
+      }, 0);
     }
     function toggleTracker(clientId, weekId, day, checked) {
       localStorage.setItem(trackerKey(clientId, weekId, day), checked ? "1" : "0");
@@ -454,15 +472,18 @@
       const pct = target ? Math.min(100, Math.round(done / target * 100)) : 0;
       const month = currentTrackerMonth();
       const rows = month.weeks.map(week => {
-        const checkedInWeek = trackerDays.filter(day => isTrackerChecked(client.id, week.id, day)).length;
+        const checkedInWeek = trackerDays.filter(day => hasTrackerDate(week, day) && isTrackerChecked(client.id, week.id, day)).length;
+        const weekTarget = trackerDays.filter(day => hasTrackerDate(week, day) && client.days.includes(day)).length;
         return `
           <div class="tracker-cell week-label"><strong>${week.label}</strong><span class="delta">${week.range}</span></div>
           ${trackerDays.map(day => {
+            const date = week.dates && week.dates[day];
+            if (!date) return `<div class="tracker-cell muted-cell"><span class="delta">Not in month</span></div>`;
             const checked = isTrackerChecked(client.id, week.id, day);
             const suggested = client.days.includes(day);
-            return `<div class="tracker-cell"><label class="day-box"><input type="checkbox" ${checked ? "checked" : ""} onchange="toggleTracker('${client.id}','${week.id}','${day}',this.checked)"><span>${day}</span></label>${suggested ? `<div class="delta">planned</div>` : ""}</div>`;
+            return `<div class="tracker-cell"><label class="day-box"><input type="checkbox" ${checked ? "checked" : ""} onchange="toggleTracker('${client.id}','${week.id}','${day}',this.checked)"><span>${day}<small>${date}</small></span></label>${suggested ? `<div class="delta">planned</div>` : ""}</div>`;
           }).join("")}
-          <div class="tracker-cell"><span class="target-pill">${checkedInWeek}/${client.target}</span></div>
+          <div class="tracker-cell"><span class="target-pill">${checkedInWeek}/${weekTarget}</span></div>
         `;
       }).join("");
       return `<section class="card tracker-card">

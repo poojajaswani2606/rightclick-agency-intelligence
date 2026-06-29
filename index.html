@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Right Click Projects - Agency Intelligence</title>
+  <style>
+    :root {
+      --bg: #f4f5fb;
+      --card: #ffffff;
+      --ink: #14152b;
+      --muted: #68708a;
+      --line: #e7e8f2;
+      --purple: #5146dc;
+      --purple-soft: #f5f3ff;
+      --green: #47b987;
+      --green-soft: #eefaf4;
+      --amber: #eba63a;
+      --amber-soft: #fff8e9;
+      --coral: #ff6b61;
+      --navy: #142f45;
+      --shadow: 0 3px 12px rgba(20, 21, 43, .05);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Helvetica, Arial, sans-serif;
+      letter-spacing: 0;
+    }
+    a { color: var(--purple); font-weight: 800; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+    button { font: inherit; letter-spacing: 0; }
+    .app { display: grid; grid-template-columns: 252px minmax(0, 1fr); min-height: 100vh; }
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: auto;
+      padding: 24px 14px;
+      background: #fff;
+      border-right: 1px solid var(--line);
+    }
+    .brand { padding: 0 6px 18px; margin-bottom: 18px; border-bottom: 1px solid var(--line); }
+    .brand strong { display: block; font-size: 15px; line-height: 1.2; }
+    .brand span { display: block; margin-top: 7px; color: var(--muted); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+    .nav-label { margin: 20px 7px 8px; color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; }
+    .nav {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 10px 8px;
+      display: grid;
+      grid-template-columns: 10px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+      font-weight: 650;
+    }
+    .nav:hover { background: #f7f7fd; }
+    .nav.active { background: var(--purple); color: #fff; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #a5adbf; }
+    .dot.live { background: var(--green); }
+    .dot.warn { background: var(--amber); }
+    .nav small { color: inherit; opacity: .72; font-size: 11px; }
+    main { min-width: 0; padding: 28px 36px 54px; }
+    .page { max-width: 1180px; margin: 0 auto; }
+    .topbar { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; padding-bottom: 20px; border-bottom: 1px solid var(--line); }
+    h1, h2, h3 { margin: 0; line-height: 1.15; letter-spacing: 0; }
+    h1 { font-size: 28px; }
+    h2 { font-size: 18px; }
+    h3 { font-size: 14px; }
+    .sub { margin: 7px 0 0; color: var(--muted); line-height: 1.45; }
+    .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .btn, .link-btn {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 8px 11px;
+      min-height: 36px;
+      font-weight: 800;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+    }
+    .btn.primary, .link-btn.primary { background: var(--purple); border-color: var(--purple); color: white; }
+    .btn:hover, .link-btn:hover { border-color: #cfd2e8; background: #fbfbff; }
+    .btn.primary:hover, .link-btn.primary:hover { background: #4237c8; color: white; }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: var(--purple-soft);
+      color: var(--purple);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .pill.green { background: var(--green-soft); color: #177a52; }
+    .pill.amber { background: var(--amber-soft); color: #9b6408; }
+    .pill.dark { background: var(--navy); color: white; }
+    .months { display: flex; gap: 10px; margin: 24px 0 14px; border-bottom: 1px solid var(--line); }
+    .months button { border: 0; background: transparent; padding: 0 10px 12px; color: var(--muted); font-weight: 850; cursor: pointer; border-bottom: 3px solid transparent; }
+    .months button.active { color: var(--purple); border-bottom-color: var(--purple); }
+    .progress { height: 6px; border-radius: 999px; background: #e7e8f2; overflow: hidden; margin: 8px 0 28px; }
+    .progress span { display: block; height: 100%; background: var(--amber); border-radius: inherit; }
+    .progress-label { display: flex; justify-content: flex-end; color: var(--muted); font-size: 12px; margin-top: -20px; margin-bottom: 22px; }
+    .section-title { margin: 24px 0 14px; padding-left: 13px; border-left: 4px solid var(--purple); }
+    .grid { display: grid; gap: 14px; }
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .grid-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+    .grid-6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .card, .kpi {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      box-shadow: var(--shadow);
+    }
+    .card { padding: 18px; margin-bottom: 18px; }
+    .kpi { padding: 14px 15px; min-height: 108px; border-top: 3px solid var(--purple); }
+    .kpi.green { border-top-color: var(--green); }
+    .kpi.amber { border-top-color: var(--amber); }
+    .kpi.coral { border-top-color: var(--coral); }
+    .label { color: var(--muted); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .09em; }
+    .value { margin-top: 12px; font-size: 28px; font-weight: 950; color: var(--purple); overflow-wrap: anywhere; }
+    .kpi.green .value { color: var(--green); }
+    .kpi.amber .value { color: var(--amber); }
+    .kpi.coral .value { color: var(--coral); }
+    .delta { color: var(--muted); font-size: 12px; margin-top: 7px; line-height: 1.35; }
+    .standout {
+      margin: 8px 0 24px;
+      background: linear-gradient(120deg, #241c67, #342f86);
+      color: white;
+      border-radius: 13px;
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+    .standout strong { display: block; font-size: 17px; line-height: 1.35; margin: 12px 0; }
+    .standout .muted { color: #d8d8ff; font-weight: 650; }
+    .table-card { padding: 0; overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: middle; }
+    th { color: var(--muted); font-size: 10.5px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; background: #fbfbff; }
+    tr:last-child td { border-bottom: 0; }
+    .featured-row { background: #faf5ff; }
+    .post-title { font-weight: 850; line-height: 1.35; }
+    .bar-metric { display: flex; align-items: center; gap: 8px; font-weight: 900; }
+    .mini-bar { height: 6px; width: 76px; background: #edf0f7; border-radius: 999px; overflow: hidden; }
+    .mini-bar span { display: block; height: 100%; background: var(--purple); border-radius: inherit; }
+    .analysis-panel { border-top: 3px solid var(--green); }
+    .analysis-panel.amber { border-top-color: var(--amber); }
+    .analysis-item { padding: 14px 0; border-bottom: 1px solid var(--line); line-height: 1.48; color: #33384f; }
+    .analysis-item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .analysis-item strong { display: block; margin-bottom: 6px; color: var(--ink); text-transform: uppercase; font-size: 11px; letter-spacing: .08em; }
+    .glance-box { background: #f0f0ff; border-radius: 8px; padding: 15px 17px; line-height: 1.55; margin-bottom: 16px; }
+    .role-row, .client-row { display: grid; align-items: center; gap: 12px; border-bottom: 1px solid var(--line); padding: 11px 0; }
+    .role-row { grid-template-columns: 180px minmax(0, 1fr) 42px; }
+    .client-row { grid-template-columns: minmax(150px, 1fr) 130px 90px 120px 96px; cursor: pointer; }
+    .client-row:last-child, .role-row:last-child { border-bottom: 0; }
+    .bar { height: 8px; border-radius: 999px; background: #edf0f7; overflow: hidden; }
+    .bar span { display: block; height: 100%; background: linear-gradient(90deg, var(--purple), #877cff); border-radius: inherit; }
+    .insight-card { min-height: 156px; line-height: 1.5; }
+    .insight-card strong { display: block; margin-bottom: 9px; font-size: 15px; }
+    .viewer-card { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 13px; line-height: 1.45; }
+    .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--purple-soft); color: var(--purple); display: grid; place-items: center; font-weight: 950; }
+    .viewer-card .name { font-weight: 900; }
+    .note { border: 1px dashed #cfd3e7; background: #fbfbff; border-radius: 8px; padding: 13px; color: var(--muted); line-height: 1.45; margin-top: 12px; }
+    .report-hub { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+    .tracker-card { padding: 0; overflow: hidden; }
+    .tracker-head { padding: 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+    .tracker-grid { display: grid; grid-template-columns: 150px repeat(6, minmax(82px, 1fr)) 92px; overflow-x: auto; }
+    .tracker-cell { min-height: 58px; padding: 12px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #fff; }
+    .tracker-cell:nth-child(8n) { border-right: 0; }
+    .tracker-label { background: #fbfbff; font-weight: 900; color: var(--muted); text-transform: uppercase; font-size: 11px; letter-spacing: .08em; }
+    .week-label strong { display: block; color: var(--ink); font-size: 14px; margin-bottom: 3px; }
+    .day-box { display: flex; align-items: center; gap: 8px; cursor: pointer; font-weight: 750; color: var(--ink); }
+    .day-box input { width: 18px; height: 18px; accent-color: var(--purple); }
+    .target-pill { display: inline-flex; justify-content: center; min-width: 58px; border-radius: 999px; padding: 5px 8px; background: var(--purple-soft); color: var(--purple); font-weight: 950; }
+    .tracker-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
+    .hidden { display: none; }
+    @media (max-width: 1100px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: relative; height: auto; }
+      .grid-5, .grid-6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .grid-4, .grid-3, .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tracker-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .client-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 720px) {
+      main { padding: 18px; }
+      .topbar { display: block; }
+      .toolbar { justify-content: flex-start; margin-top: 14px; }
+      .grid-2, .grid-3, .grid-4, .grid-5, .grid-6 { grid-template-columns: 1fr; }
+      .tracker-summary { grid-template-columns: 1fr; }
+      .role-row, .client-row { grid-template-columns: 1fr; }
+      th, td { padding: 10px 9px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <strong>The Right Click Projects</strong>
+        <span>Agency Intelligence</span>
+      </div>
+      <div class="nav-label">Agency</div>
+      <button class="nav active" data-view="agency"><span class="dot live"></span><span>Agency Cockpit</span><small></small></button>
+      <button class="nav" data-view="collector"><span class="dot"></span><span>LinkedIn Collector</span><small></small></button>
+      <button class="nav" data-view="tracker"><span class="dot warn"></span><span>Content Tracker</span><small></small></button>
+      <div class="nav-label">Clients</div>
+      <button class="nav" data-client="nick"><span class="dot live"></span><span>Nick Turner</span><small>May</small></button>
+      <button class="nav" data-client="zachary"><span class="dot live"></span><span>Zachary Perl</span><small>May</small></button>
+      <button class="nav" data-client="jose"><span class="dot live"></span><span>Jose Aleman</span><small>May</small></button>
+      <button class="nav" data-client="kelly"><span class="dot"></span><span>Kelly</span><small>-</small></button>
+      <button class="nav" data-client="mike"><span class="dot"></span><span>Mike</span><small>-</small></button>
+      <button class="nav" data-client="workspace"><span class="dot"></span><span>Workspace</span><small>-</small></button>
+    </aside>
+    <main>
+      <section id="agency" class="page"></section>
+      <section id="collector" class="page hidden"></section>
+      <section id="tracker" class="page hidden"></section>
+      <section id="client" class="page hidden"></section>
+    </main>
+  </div>
+
+  <script>
+    const clients = [
+      { id: "nick", name: "Nick Turner", role: "CEO - Dreamdata", owner: "Pooja", region: "US", retainer: "$1,249/mo", status: "Ready", qc: "9/12" },
+      { id: "zachary", name: "Zachary Perl", role: "Founder - dotfun", owner: "Tanisha", region: "US", retainer: "$1,700/mo", status: "Ready", qc: "9/12" },
+      { id: "jose", name: "Jose Aleman", role: "Founder", owner: "Pooja", region: "US", retainer: "Rs. 38,000/mo", status: "Ready", qc: "6/6" },
+      { id: "kelly", name: "Kelly", role: "Founder", owner: "Pooja", region: "US", retainer: "Rs. 38,000/mo", status: "No data", qc: "0/6" },
+      { id: "mike", name: "Mike", role: "Founder", owner: "Pooja", region: "US", retainer: "Rs. 45,000/mo", status: "No data", qc: "0/6" },
+      { id: "workspace", name: "Workspace", role: "Brand", owner: "Tanisha", region: "India", retainer: "Rs. 85,000/mo", status: "No data", qc: "0/6" }
+    ];
+
+    const contentTrackerClients = [
+      { id: "nick", name: "Nick Turner", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
+      { id: "zachary", name: "Zachary Perl", owner: "Tanisha", target: 3, service: "LinkedIn + blog", days: ["Mon", "Wed", "Fri"] },
+      { id: "jose", name: "Jose Aleman", owner: "Pooja", target: 2, service: "LinkedIn", days: ["Tue", "Thu"] },
+      { id: "kelly", name: "Kelly", owner: "Pooja", target: 2, service: "LinkedIn", days: ["Tue", "Thu"] },
+      { id: "mike", name: "Mike", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
+      { id: "workspace", name: "Workspace", owner: "Tanisha", target: 2, service: "Newsletter / blog / LinkedIn", days: ["Tue", "Fri"] }
+    ];
+
+    const trackerMonths = [
+      { id: "2026-06", short: "June", label: "June 2026", weeks: [
+        { id: "w1", label: "Week 1", range: "Jun 1-6" },
+        { id: "w2", label: "Week 2", range: "Jun 8-13" },
+        { id: "w3", label: "Week 3", range: "Jun 15-20" },
+        { id: "w4", label: "Week 4", range: "Jun 22-27" }
+      ] },
+      { id: "2026-07", short: "July", label: "July 2026", weeks: [
+        { id: "w1", label: "Week 1", range: "Jul 1-4" },
+        { id: "w2", label: "Week 2", range: "Jul 6-11" },
+        { id: "w3", label: "Week 3", range: "Jul 13-18" },
+        { id: "w4", label: "Week 4", range: "Jul 20-25" }
+      ] },
+      { id: "2026-08", short: "August", label: "August 2026", weeks: [
+        { id: "w1", label: "Week 1", range: "Aug 3-8" },
+        { id: "w2", label: "Week 2", range: "Aug 10-15" },
+        { id: "w3", label: "Week 3", range: "Aug 17-22" },
+        { id: "w4", label: "Week 4", range: "Aug 24-29" }
+      ] },
+      { id: "2026-09", short: "September", label: "September 2026", weeks: [
+        { id: "w1", label: "Week 1", range: "Sep 1-5" },
+        { id: "w2", label: "Week 2", range: "Sep 7-12" },
+        { id: "w3", label: "Week 3", range: "Sep 14-19" },
+        { id: "w4", label: "Week 4", range: "Sep 21-26" }
+      ] },
+      { id: "2026-10", short: "October", label: "October 2026", weeks: [
+        { id: "w1", label: "Week 1", range: "Oct 1-3" },
+        { id: "w2", label: "Week 2", range: "Oct 5-10" },
+        { id: "w3", label: "Week 3", range: "Oct 12-17" },
+        { id: "w4", label: "Week 4", range: "Oct 19-24" }
+      ] },
+      { id: "2026-11", short: "November", label: "November 2026", weeks: [
+        { id: "w1", label: "Week 1", range: "Nov 2-7" },
+        { id: "w2", label: "Week 2", range: "Nov 9-14" },
+        { id: "w3", label: "Week 3", range: "Nov 16-21" },
+        { id: "w4", label: "Week 4", range: "Nov 23-28" }
+      ] },
+      { id: "2026-12", short: "December", label: "December 2026", weeks: [
+        { id: "w1", label: "Week 1", range: "Dec 1-5" },
+        { id: "w2", label: "Week 2", range: "Dec 7-12" },
+        { id: "w3", label: "Week 3", range: "Dec 14-19" },
+        { id: "w4", label: "Week 4", range: "Dec 21-26" }
+      ] }
+    ];
+    let activeTrackerMonth = "2026-06";
+    const trackerDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+    const josePosts = [
+      { n: 1, starred: true, hook: "A Director of RevOps recently was asked to justify his $200k+ a year salary.", date: "May 7", impressions: 114180, likes: 392, comments: 40, reposts: 9, engagements: 674, link: "https://www.linkedin.com/posts/jose-aleman-a4539_a-director-of-revops-recently-was-asked-to-share-7458153690642911232-Z1Hb", read: "Huge reach. This was the breakout post of the month." },
+      { n: 2, starred: true, hook: "RevOps as a role was dying because it was too available. Now it is making a strong comeback.", date: "May 18", impressions: 6882, likes: 89, comments: 3, reposts: 1, engagements: 111, link: "https://www.linkedin.com/posts/jose-aleman-a4539_revops-as-a-role-was-dying-because-it-was-share-7462140085686378496-_u7R", read: "Strong category POV. The role-anxiety angle worked." },
+      { n: 3, starred: false, hook: "174,000 job postings. A 300% surge in VP titles. What the hell is actually happening to the RevOps career right now?", date: "May 5", impressions: 2987, likes: 31, comments: 2, reposts: 0, engagements: 39, link: "https://www.linkedin.com/posts/jose-aleman-a4539_174000-job-postings-a-300-surge-in-vp-ugcPost-7457419184709226496-hzs0", read: "The number made the post credible and easy to understand." },
+      { n: 4, starred: true, hook: "My recent full body health checkup showed me something very different from what my fitness app had been rewarding me for.", date: "May 14", impressions: 2069, likes: 45, comments: 9, reposts: 0, engagements: 54, link: "https://www.linkedin.com/posts/jose-aleman-a4539_my-recent-full-body-health-checkup-showed-share-7460690545460281345-aRRM", read: "Personal story. It gave the account a more human angle." },
+      { n: 5, starred: false, hook: "Why designing a compensation plan is still one of the hardest tests for RevOps.", date: "May 29", impressions: 1336, likes: 34, comments: 0, reposts: 0, engagements: 34, link: "https://www.linkedin.com/posts/jose-aleman-a4539_why-designing-a-compensation-plan-is-still-ugcPost-7466121518830465024-l4-y", read: "Useful topic. Needs a sharper opening to earn more reach." },
+      { n: 6, starred: false, hook: "If your forecast is missing by 20% every quarter, buying Clari or Gong won't fix it.", date: "May 25", impressions: 1053, likes: 27, comments: 3, reposts: 0, engagements: 29, link: "https://www.linkedin.com/posts/jose-aleman-a4539_if-your-forecast-is-missing-by-20-every-share-7464673105534357504-pOWH", read: "Good pain point. Make it more CEO/CRO-facing next time." },
+      { n: 7, starred: false, hook: "The RevOps director who cannot diagnose their comp plan in 30 minutes is the one getting replaced in 2026.", date: "May 28", impressions: 426, likes: 35, comments: 0, reposts: 5, engagements: 26, link: "https://www.linkedin.com/posts/jose-aleman-a4539_uncappdinsider-ugcPost-7465782716609785857-rE22", read: "Small audience, strong idea. Worth rewriting as a bigger post." },
+      { n: 8, starred: false, hook: "Why is your CEO paying an outside consultant $150k to tell them what your RevOps data already says?", date: "May 27", impressions: 412, likes: 16, comments: 0, reposts: 0, engagements: 14, link: "https://www.linkedin.com/posts/jose-aleman-a4539_why-is-your-ceo-paying-an-outside-consultant-share-7465394109613060096-7M59", read: "The idea is strong, but it needs a better first line." }
+    ];
+
+    const whatClicked = [
+      ["The winning post had a real scene", "A RevOps leader being asked to justify a $200K salary is easy to picture. That is why people stopped scrolling."],
+      ["The month was about respect", "Jose's audience reacted when he talked about RevOps being treated as overhead instead of serious business leverage."],
+      ["Numbers helped", "Salary, job postings, forecast misses and comp plans made the posts feel concrete. Jose should keep using numbers."],
+      ["The right people noticed", "RevOps, GTM, CRO and founder profiles engaged. That matters more than casual likes from a broad audience."]
+    ];
+
+    const nextStrategy = [
+      ["Do one more salary-style post", "Use the same pattern: a role, a number and a senior person asking a hard question."],
+      ["Make the first line sharper", "No soft questions. Start with a person, a problem or a strong verdict."],
+      ["Keep talking about RevOps value", "This is the lane Jose owns: why RevOps matters, why it gets ignored and what strong RevOps actually fixes."],
+      ["Use comments as ideas", "The best comments are not just proof. They tell us what the market is thinking."],
+      ["Follow up with the right people", "CROs, founders, investors and RevOps leaders who show up should not stay passive names in a report."]
+    ];
+
+    const audienceInsights = [
+      ["The RevOps operating class is watching", "40 named viewers are director-level or above RevOps, GTM, operations, founder or investor profiles. This is the exact market Jose needs."],
+      ["PE/VC operators signal leverage", "Investors and operating partners can turn one trusted idea into portfolio-wide introductions. They matter more than their count suggests."],
+      ["Peer and competitor layer is engaged", "RevShoppe, SalesGlobe and RevOps media/operator profiles mean Jose is being benchmarked inside the category."],
+      ["Anonymous viewers are not bad", "200 anonymous visitors often means senior people are browsing quietly before they engage. This is hidden attention, not missing value."]
+    ];
+
+    const viewerRoles = [
+      ["RevOps", 14], ["CEO/Founder", 8], ["GTM Strategy", 8], ["Marketing", 4], ["PE/VC/Investor", 3], ["CMO", 2], ["CRO", 1], ["Director", 1], ["COO", 1]
+    ];
+
+    const tier1Viewers = [
+      ["JS", "Jaspal S.", "Incentives Engineer @ Anthropic | Founder @ Qotiv", "AI RevOps / Comp", "AI + incentives operator. Direct fit for Jose's compensation and RevOps automation positioning."],
+      ["BP", "Ben Paterson", "Managing Director & Head of GTM, True Search", "GTM Strategy", "Executive-search GTM leader. He sees hiring demand and can carry Jose's name into leadership searches."],
+      ["MW", "Myles D. Weinstein", "Operating Partner, Lightspeed", "PE/VC", "Portfolio-company GTM operators search for advisors and frameworks they can send into companies."],
+      ["JG", "Joe Gomez", "VP Revenue Operations, LVT", "RevOps buyer", "Direct ICP. Owns the forecast and compensation problems Jose writes about."],
+      ["AD", "Andrew de Geofroy", "VP GTM Strategy & Ops, Luxury Presence", "GTM Strategy", "Senior SaaS GTM operator who can buy, refer or circulate Jose's thinking internally."],
+      ["JV", "Jason Vargas", "Co-Founder, RevShoppe", "RevOps founder", "Category peer and founder. Peer attention means Jose is being benchmarked inside his own market."],
+      ["AA", "Ankit Aggarwal", "Revenue Operations + AI", "RevOps AI", "RevOps automation specialist and commenter. Tribe member and informal amplifier."],
+      ["MI", "Mirek", "Founder", "Founder / DM intent", "Founder who asked for a DM. This is relationship intent, not passive reach."]
+    ];
+
+    const tier2Rows = [
+      ["Jeremy Trudell", "Sales Operations, AssetMark", "Sales Ops"],
+      ["Christopher Pinske", "Management and Operations Engineering Consultant", "Consultant / Advisor"],
+      ["Greg Wakefield", "Executive Leader", "Recruiter / HR"],
+      ["Nabeel Ebeid", "Finance, Strategy and Ops Leader", "Strategy Ops"],
+      ["Nema Djavadi", "Chief of Staff", "Strategy Ops"],
+      ["Sudhakar", "Data & AI Tech Lead", "Data / AI"],
+      ["James Vida", "Management Coach", "Advisor"]
+    ];
+
+    function formatNumber(n) {
+      return n >= 100000 ? Math.round(n / 1000) + "K" : n >= 1000 ? (n / 1000).toFixed(1) + "K" : String(n);
+    }
+    function kpi(label, value, delta, type = "") {
+      return `<div class="kpi ${type}"><div class="label">${label}</div><div class="value">${value}</div><div class="delta">${delta || ""}</div></div>`;
+    }
+    function setActive(target) {
+      document.querySelectorAll(".nav").forEach(n => n.classList.remove("active"));
+      if (target) target.classList.add("active");
+    }
+    function show(view, clientId) {
+      document.querySelectorAll("main > section").forEach(s => s.classList.add("hidden"));
+      document.getElementById(view).classList.remove("hidden");
+      if (view === "client") renderClient(clientId);
+    }
+    function reportLinks(clientId) {
+      if (clientId === "jose") {
+        return `<div class="report-hub">
+          <a class="link-btn" href="https://www.linkedin.com/in/jose-aleman-a4539/" target="_blank">LinkedIn Profile</a>
+          <a class="link-btn" href="reports/jose-aleman-content-performance-all-may-2026.pdf" download>Performance PDF</a>
+          <a class="link-btn primary" href="reports/jose-aleman-audience-intelligence-may-2026.pdf" download>Audience PDF</a>
+          <a class="link-btn" href="reports/jose-aleman-audience-intelligence-may-2026.xlsx" download>Excel</a>
+        </div>`;
+      }
+      return `<div class="report-hub"><span class="pill amber">Reports pending or sample data</span></div>`;
+    }
+    function renderAgency() {
+      const rows = clients.map(c => `<div class="client-row" onclick="openClient('${c.id}')">
+        <div><strong>${c.name}</strong><div class="delta">${c.role}</div></div>
+        <div>${c.owner}</div>
+        <div><span class="pill">${c.region}</span></div>
+        <div><strong>${c.retainer}</strong></div>
+        <div><span class="pill ${c.status === "Ready" ? "green" : "amber"}">${c.qc} QC</span></div>
+      </div>`).join("");
+      document.getElementById("agency").innerHTML = `
+        <div class="topbar">
+          <div><h1>Agency Cockpit</h1><p class="sub">Internal view for Pooja and Tanisha only.</p></div>
+          <div class="meta"><span class="pill green">6 active clients</span><span class="pill">Pooja: 4</span><span class="pill">Tanisha: 2</span></div>
+        </div>
+        <div class="grid grid-4" style="margin:24px 0">
+          ${kpi("Monthly USD", "$2,949", "From 2 US clients")}
+          ${kpi("Monthly INR", "Rs. 406K", "From India + local retainers")}
+          ${kpi("Total clients", "6", "Visible in local build", "green")}
+          ${kpi("Reports ready", "3/3", "Jose package complete", "amber")}
+        </div>
+        <section class="card">
+          <div class="section-title" style="margin-top:0"><h2>Client Roster</h2></div>
+          ${rows}
+        </section>
+        <div class="grid grid-2">
+          <section class="card"><h2>Workload Split</h2><div class="role-row"><strong>Pooja</strong><div class="bar"><span style="width:67%"></span></div><strong>4</strong></div><div class="role-row"><strong>Tanisha</strong><div class="bar"><span style="width:33%"></span></div><strong>2</strong></div></section>
+          <section class="card"><h2>Quick Actions</h2><div class="report-hub"><button class="btn" onclick="show('collector')">LinkedIn Collector</button><button class="btn" onclick="show('tracker')">Content Tracker</button><button class="btn primary" onclick="openClient('jose')">Open Jose</button></div><p class="note">This is now the monthly control room: agency overview first, content tracking second, client month pages third.</p></section>
+        </div>`;
+    }
+    function renderCollector() {
+      document.getElementById("collector").innerHTML = `
+        <div class="topbar"><div><h1>LinkedIn Collector</h1><p class="sub">Manual-login workflow. LinkedIn stays the source of truth for live posts and links.</p></div><span class="pill amber">Browser-assisted</span></div>
+        <section class="card"><h2>Collector Responsibilities</h2>
+          ${["Find every live post for the selected month", "Save post URLs and screenshots", "Collect standout comments and hidden gems", "Flag mentions, reposts, newsletters and articles", "Check mismatches between LinkedIn and analytics export"].map((x,i)=>`<div class="role-row"><strong>${i+1}</strong><div>${x}</div><span class="pill">Step</span></div>`).join("")}
+        </section>`;
+    }
+    function trackerKey(clientId, weekId, day) {
+      return `trc-content-tracker:${clientId}:${activeTrackerMonth}:${weekId}:${day}`;
+    }
+    function currentTrackerMonth() {
+      return trackerMonths.find(month => month.id === activeTrackerMonth) || trackerMonths[0];
+    }
+    function isTrackerChecked(clientId, weekId, day) {
+      return localStorage.getItem(trackerKey(clientId, weekId, day)) === "1";
+    }
+    function trackerClientDone(client) {
+      return currentTrackerMonth().weeks.reduce((total, week) => total + trackerDays.filter(day => isTrackerChecked(client.id, week.id, day)).length, 0);
+    }
+    function trackerClientTarget(client) {
+      return client.target * currentTrackerMonth().weeks.length;
+    }
+    function toggleTracker(clientId, weekId, day, checked) {
+      localStorage.setItem(trackerKey(clientId, weekId, day), checked ? "1" : "0");
+      renderTracker();
+    }
+    function setTrackerMonth(monthId) {
+      activeTrackerMonth = monthId;
+      history.replaceState(null, "", "#tracker-" + monthId);
+      renderTracker();
+    }
+    function renderTrackerCard(client) {
+      const done = trackerClientDone(client);
+      const target = trackerClientTarget(client);
+      const pct = target ? Math.min(100, Math.round(done / target * 100)) : 0;
+      const month = currentTrackerMonth();
+      const rows = month.weeks.map(week => {
+        const checkedInWeek = trackerDays.filter(day => isTrackerChecked(client.id, week.id, day)).length;
+        return `
+          <div class="tracker-cell week-label"><strong>${week.label}</strong><span class="delta">${week.range}</span></div>
+          ${trackerDays.map(day => {
+            const checked = isTrackerChecked(client.id, week.id, day);
+            const suggested = client.days.includes(day);
+            return `<div class="tracker-cell"><label class="day-box"><input type="checkbox" ${checked ? "checked" : ""} onchange="toggleTracker('${client.id}','${week.id}','${day}',this.checked)"><span>${day}</span></label>${suggested ? `<div class="delta">planned</div>` : ""}</div>`;
+          }).join("")}
+          <div class="tracker-cell"><span class="target-pill">${checkedInWeek}/${client.target}</span></div>
+        `;
+      }).join("");
+      return `<section class="card tracker-card">
+        <div class="tracker-head">
+          <div><h2>${client.name}</h2><p class="sub">${client.owner} · ${client.service} · ${month.label}</p></div>
+          <div><span class="pill ${done >= target ? "green" : "amber"}">${done}/${target} live</span></div>
+        </div>
+        <div style="padding:0 18px 16px">
+          <div class="progress" style="margin:16px 0 8px"><span style="width:${pct}%"></span></div>
+          <div class="delta">Monthly target: ${client.target} posts per week · suggested days: ${client.days.join(", ")}</div>
+        </div>
+        <div class="tracker-grid">
+          <div class="tracker-cell tracker-label">Week</div>
+          ${trackerDays.map(day => `<div class="tracker-cell tracker-label">${day}</div>`).join("")}
+          <div class="tracker-cell tracker-label">Done</div>
+          ${rows}
+        </div>
+      </section>`;
+    }
+    function renderTracker() {
+      const totalDone = contentTrackerClients.reduce((sum, client) => sum + trackerClientDone(client), 0);
+      const totalTarget = contentTrackerClients.reduce((sum, client) => sum + trackerClientTarget(client), 0);
+      const onTrack = contentTrackerClients.filter(client => trackerClientDone(client) >= trackerClientTarget(client)).length;
+      const month = currentTrackerMonth();
+      document.getElementById("tracker").innerHTML = `
+        <div class="topbar">
+          <div><h1>Content Tracker</h1><p class="sub">Monthly posting checklist for Pooja and Tanisha. Tick the day when a post goes live.</p></div>
+          <span class="pill amber">${month.label}</span>
+        </div>
+        <div class="months">${trackerMonths.map(item => `<button class="${item.id === month.id ? "active" : ""}" onclick="setTrackerMonth('${item.id}')">${item.short}</button>`).join("")}</div>
+        <div class="tracker-summary">
+          ${kpi("Total live", totalDone, `of ${totalTarget} planned`)}
+          ${kpi("Clients tracked", contentTrackerClients.length, "monthly checklist", "green")}
+          ${kpi("On track", onTrack, "met full month target", "amber")}
+          ${kpi("Posting days", "Mon-Sat", "tick when live")}
+        </div>
+        <section class="card"><h2>How to use this</h2><p class="sub">Choose a month tab, then tick whichever Monday-Saturday box matches the day the post went live. Planned days are only suggestions; if a post goes live on another day, tick that day.</p></section>
+        ${contentTrackerClients.map(renderTrackerCard).join("")}
+      `;
+    }
+    function openClient(id) {
+      show("client", id);
+      setActive(document.querySelector(`[data-client="${id}"]`));
+      history.replaceState(null, "", "#client-" + id);
+    }
+    function renderClient(id) {
+      if (id === "jose") return renderJose();
+      const client = clients.find(c => c.id === id) || clients[0];
+      document.getElementById("client").innerHTML = `
+        <div class="topbar">
+          <div><h1>${client.name} · May 2026</h1><p class="sub">${client.role} · Owner: ${client.owner} · ${client.retainer}</p></div>
+          <span class="pill ${client.status === "Ready" ? "green" : "amber"}">${client.qc} QC</span>
+        </div>
+        <div class="months"><button class="active">May 2026</button><button>Jun 2026</button></div>
+        <section class="card"><h2>${client.name} Dashboard</h2><p class="note">This client page is queued for the new Jose-style redesign. Jose is now the standard template: KPI cards, standout post, full post table, deep strategy, audience tiers, report links and QC.</p>${reportLinks(id)}</section>`;
+    }
+    function renderJose() {
+      const max = Math.max(...josePosts.map(p => p.impressions));
+      const postRows = josePosts.map(p => `<tr class="${p.starred ? "featured-row" : ""}">
+        <td><strong>${p.n}${p.starred ? "*" : ""}</strong></td>
+        <td><div class="post-title">${p.hook}</div><div class="delta">${p.read}</div></td>
+        <td>${p.date}</td>
+        <td><div class="bar-metric">${formatNumber(p.impressions)}<span class="mini-bar"><span style="width:${Math.max(5, p.impressions / max * 100)}%"></span></span></div></td>
+        <td>${p.likes}</td>
+        <td>${p.comments || "-"}</td>
+        <td>${p.reposts || "-"}</td>
+        <td><strong>${p.engagements}</strong></td>
+        <td><a class="link-btn" href="${p.link}" target="_blank">Open post</a></td>
+      </tr>`).join("");
+      document.getElementById("client").innerHTML = `
+        <div class="topbar">
+          <div>
+            <h1>Jose Aleman · May 2026</h1>
+            <p class="sub">Founder · Owner: Pooja · Rs. 38,000/mo</p>
+            ${reportLinks("jose")}
+          </div>
+          <div class="meta"><span class="pill amber">QC 6/6</span><span class="pill green">Reports ready</span></div>
+        </div>
+        <div class="months"><button class="active">May 2026</button><button>Jun 2026</button></div>
+        <div class="progress"><span style="width:100%"></span></div><div class="progress-label">100% complete</div>
+
+        <div class="section-title"><h2>LinkedIn Performance - May 2026</h2></div>
+        <div class="grid grid-6">
+          ${kpi("Impressions", "141K", "86K reached")}
+          ${kpi("Engagements", "993", "0.7% rate")}
+          ${kpi("New followers", "+376", "3.1K total", "green")}
+          ${kpi("Profile views", "257", "57 named visitors", "amber")}
+          ${kpi("Saves", "-", "High-intent signal")}
+          ${kpi("Posts published", "8", "7 agency / 1 client")}
+        </div>
+
+        <div class="standout">
+          <span class="pill amber">Standout Post</span>
+          <strong>A Director of RevOps recently was asked to justify his $200k+ a year salary.</strong>
+          <span class="muted">114K impressions (81% of monthly total) · 392 likes · 40 comments · 9 reposts · <a href="${josePosts[0].link}" target="_blank" style="color:#ffffff;font-weight:950">Open post</a></span>
+        </div>
+
+        <div class="section-title"><h2>All Posts - May 2026</h2></div>
+        <section class="card table-card"><table><thead><tr><th>#</th><th>Post hook</th><th>Date</th><th>Impressions</th><th>Likes</th><th>Cmts</th><th>Reposts</th><th>Total Eng.</th><th>Post link</th></tr></thead><tbody>${postRows}</tbody></table></section>
+
+        <div class="grid grid-2">
+          <section class="card analysis-panel"><h2>What Clicked This Month</h2>${whatClicked.map(i=>`<div class="analysis-item"><strong>${i[0]}</strong>${i[1]}</div>`).join("")}</section>
+          <section class="card analysis-panel amber"><h2>Next Month Strategy</h2>${nextStrategy.map(i=>`<div class="analysis-item"><strong>${i[0]}</strong>${i[1]}</div>`).join("")}</section>
+        </div>
+
+        <div class="section-title"><h2>Audience Intelligence</h2></div>
+        <div class="glance-box">Jose's May audience skews toward Revenue Operations leaders, VP-level GTM operators, founders, software executives and PE/VC operating profiles. This is not vanity attention. It is the RevOps operating class watching his work.</div>
+        <div class="grid grid-5">
+          ${kpi("Profile visitors", "257", "57 named")}
+          ${kpi("Tier 1 - ICP buyers", "40", "VPs, Directors, Founders", "green")}
+          ${kpi("Tier 2 - Champions", "7", "Senior practitioners", "amber")}
+          ${kpi("Tier 3 - Ecosystem", "2", "Peers and amplifiers")}
+          ${kpi("Anonymous", "200", "of 257 total")}
+        </div>
+
+        <section class="card">
+          <h2>Jose, Here's What's Actually Happening</h2>
+          ${[
+            ["200 anonymous", "Senior people are hiding. That is good, not bad. Many buyers browse quietly before they engage."],
+            ["3 PE/VC investors", "They do not browse randomly. They search with intent and can carry Jose into portfolio-company conversations."],
+            ["8 founders", "Including Mirek's DM intent. Relationships are starting, not just reach."],
+            ["14 RevOps leaders", "Jose's tribe is becoming an informal amplifier network."],
+            ["8 GTM Strategy leaders", "Connectors are carrying Jose's name into rooms he has not entered yet."]
+          ].map(i=>`<div class="analysis-item"><strong>${i[0]}</strong>${i[1]}</div>`).join("")}
+        </section>
+
+        <section class="card"><h2>Who Is Watching - By Role</h2>${viewerRoles.map(r=>`<div class="role-row"><strong>${r[0]}</strong><div class="bar"><span style="width:${Math.max(8, r[1] * 7)}%"></span></div><strong>${r[1]}</strong></div>`).join("")}</section>
+
+        <div class="section-title"><h2>Strategic Insights - Audience</h2></div>
+        <div class="grid grid-2">${audienceInsights.map(i=>`<section class="card insight-card"><strong>${i[0]}</strong>${i[1]}</section>`).join("")}</div>
+
+        <div class="section-title"><h2>Tier 1 - Direct ICP</h2></div>
+        <div class="grid grid-2">${tier1Viewers.map(v=>`<section class="card viewer-card"><div class="avatar">${v[0]}</div><div><div class="name">${v[1]}</div><div class="delta">${v[2]}</div><p><span class="pill">${v[3]}</span></p><p>${v[4]}</p></div></section>`).join("")}</div>
+
+        <section class="card table-card"><table><thead><tr><th>Name</th><th>Title</th><th>Category</th></tr></thead><tbody>${tier2Rows.map(r=>`<tr><td><strong>${r[0]}</strong></td><td>${r[1]}</td><td><span class="pill amber">${r[2]}</span></td></tr>`).join("")}</tbody></table></section>
+      `;
+    }
+
+    document.querySelectorAll("[data-view]").forEach(button => {
+      button.addEventListener("click", () => {
+        setActive(button);
+        show(button.dataset.view);
+        history.replaceState(null, "", "#" + button.dataset.view);
+      });
+    });
+    document.querySelectorAll("[data-client]").forEach(button => {
+      button.addEventListener("click", () => openClient(button.dataset.client));
+    });
+
+    const trackerHashMonth = (location.hash.match(/tracker-(2026-\d{2})/) || [])[1];
+    if (trackerHashMonth && trackerMonths.some(month => month.id === trackerHashMonth)) {
+      activeTrackerMonth = trackerHashMonth;
+    }
+
+    renderAgency();
+    renderCollector();
+    renderTracker();
+
+    if (location.hash.includes("jose")) {
+      openClient("jose");
+    } else if (location.hash.includes("tracker") || location.hash.includes("intake")) {
+      show("tracker");
+      setActive(document.querySelector(`[data-view="tracker"]`));
+    } else {
+      show("agency");
+    }
+  </script>
+</body>
+</html>

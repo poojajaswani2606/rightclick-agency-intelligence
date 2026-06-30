@@ -1,9 +1,17 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "rightclick-agency-intelligence",
+  "main": "src/worker.js",
   "compatibility_date": "2026-06-29",
+  "kv_namespaces": [
+    {
+      "binding": "TRACKER_STATE",
+      "id": "fe835f30f4a84f2c98b71b87671c62fe"
+    }
+  ],
   "assets": {
     "directory": "./public",
+    "binding": "ASSETS",
     "not_found_handling": "single-page-application"
   }
 }

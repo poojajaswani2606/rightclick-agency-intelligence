@@ -190,6 +190,7 @@
     .day-box small { color: var(--muted); font-size: 11px; font-weight: 800; }
     .day-box input { width: 18px; height: 18px; accent-color: var(--purple); }
     .tracker-cell.muted-cell { background: #fafbff; color: #a3a8bb; }
+    .sync-label { margin-top: 8px; color: var(--muted); font-size: 12px; font-weight: 800; }
     .target-pill { display: inline-flex; justify-content: center; min-width: 58px; border-radius: 999px; padding: 5px 8px; background: var(--purple-soft); color: var(--purple); font-weight: 950; }
     .tracker-summary { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 18px 0; }
     .hidden { display: none; }
@@ -314,6 +315,9 @@
       ] }
     ];
     let activeTrackerMonth = "2026-06";
+    let trackerState = {};
+    let trackerLoaded = false;
+    let trackerSyncStatus = location.protocol === "file:" ? "Local-only on this device" : "Loading shared tracker...";
     const trackerDays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
     const josePosts = [
@@ -442,7 +446,8 @@
       return trackerMonths.find(month => month.id === activeTrackerMonth) || trackerMonths[0];
     }
     function isTrackerChecked(clientId, weekId, day) {
-      return localStorage.getItem(trackerKey(clientId, weekId, day)) === "1";
+      const key = trackerKey(clientId, weekId, day);
+      return trackerState[key] === true || (!trackerLoaded && localStorage.getItem(key) === "1");
     }
     function hasTrackerDate(week, day) {
       return Boolean(week.dates && week.dates[day]);
@@ -457,13 +462,65 @@
         return total + trackerDays.filter(day => hasTrackerDate(week, day) && client.days.includes(day)).length;
       }, 0);
     }
-    function toggleTracker(clientId, weekId, day, checked) {
-      localStorage.setItem(trackerKey(clientId, weekId, day), checked ? "1" : "0");
+    async function toggleTracker(clientId, weekId, day, checked) {
+      const key = trackerKey(clientId, weekId, day);
+      if (checked) {
+        trackerState[key] = true;
+        localStorage.setItem(key, "1");
+      } else {
+        delete trackerState[key];
+        localStorage.removeItem(key);
+      }
+      trackerSyncStatus = location.protocol === "file:" ? "Saved on this device only" : "Saving shared tracker...";
       renderTracker();
+      await saveTrackerState();
     }
     function setTrackerMonth(monthId) {
       activeTrackerMonth = monthId;
       history.replaceState(null, "", "#tracker-" + monthId);
+      renderTracker();
+    }
+    function copyLocalTrackerState() {
+      Object.keys(localStorage).filter(key => key.startsWith("trc-content-tracker:")).forEach(key => {
+        if (localStorage.getItem(key) === "1") trackerState[key] = true;
+      });
+    }
+    async function loadTrackerState() {
+      copyLocalTrackerState();
+      if (location.protocol === "file:") {
+        trackerLoaded = true;
+        trackerSyncStatus = "Local-only on this device";
+        renderTracker();
+        return;
+      }
+      try {
+        const response = await fetch("/api/tracker", { headers: { "Accept": "application/json" } });
+        if (!response.ok) throw new Error("Tracker load failed");
+        const data = await response.json();
+        trackerState = { ...(data.state || {}), ...trackerState };
+        trackerLoaded = true;
+        trackerSyncStatus = "Shared online tracker";
+        renderTracker();
+        await saveTrackerState();
+      } catch (error) {
+        trackerLoaded = true;
+        trackerSyncStatus = "Offline fallback: saved on this device";
+        renderTracker();
+      }
+    }
+    async function saveTrackerState() {
+      if (location.protocol === "file:") return;
+      try {
+        const response = await fetch("/api/tracker", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ state: trackerState })
+        });
+        if (!response.ok) throw new Error("Tracker save failed");
+        trackerSyncStatus = "Shared online tracker";
+      } catch (error) {
+        trackerSyncStatus = "Could not sync. Saved on this device for now.";
+      }
       renderTracker();
     }
     function renderTrackerCard(client) {
@@ -510,7 +567,7 @@
       const month = currentTrackerMonth();
       document.getElementById("tracker").innerHTML = `
         <div class="topbar">
-          <div><h1>Content Tracker</h1><p class="sub">Monthly posting checklist for Pooja and Tanisha. Tick the day when a post goes live.</p></div>
+          <div><h1>Content Tracker</h1><p class="sub">Monthly posting checklist for Pooja and Tanisha. Tick the day when a post goes live.</p><div class="sync-label">${trackerSyncStatus}</div></div>
           <span class="pill amber">${month.label}</span>
         </div>
         <div class="months">${trackerMonths.map(item => `<button class="${item.id === month.id ? "active" : ""}" onclick="setTrackerMonth('${item.id}')">${item.short}</button>`).join("")}</div>
@@ -641,6 +698,7 @@
     renderAgency();
     renderCollector();
     renderTracker();
+    loadTrackerState();
 
     if (location.hash.includes("jose")) {
       openClient("jose");

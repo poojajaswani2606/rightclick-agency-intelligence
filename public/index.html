@@ -233,7 +233,6 @@
       <button class="nav" data-client="kelly"><span class="dot"></span><span>Kelly</span><small>-</small></button>
       <button class="nav" data-client="mike"><span class="dot"></span><span>Mike</span><small>-</small></button>
       <button class="nav" data-client="siva"><span class="dot"></span><span>Siva Rajamani</span><small>-</small></button>
-      <button class="nav" data-client="workspace"><span class="dot"></span><span>Workspace</span><small>-</small></button>
     </aside>
     <main>
       <section id="agency" class="page"></section>
@@ -252,8 +251,7 @@
       { id: "aakash", name: "Aakash Kandoi", role: "Managing Director - Jagdish Farshan", owner: "Pooja", region: "India", retainer: "Rs. 48,000/mo", status: "No data", qc: "0/12" },
       { id: "kelly", name: "Kelly McGuire", role: "VP of Customer Success", owner: "Pooja", region: "US", retainer: "$465/mo", status: "No data", qc: "0/8" },
       { id: "mike", name: "Mike Groeneveld", role: "SVP of Global Sales", owner: "Pooja", region: "US", retainer: "$550/mo", status: "No data", qc: "0/12" },
-      { id: "siva", name: "Siva Rajamani", role: "CEO", owner: "Pooja", region: "US", retainer: "$700/mo", status: "No data", qc: "0/12" },
-      { id: "workspace", name: "Workspace", role: "Brand", owner: "Tanisha", region: "India", retainer: "Rs. 85,000/mo", status: "No data", qc: "0/6" }
+      { id: "siva", name: "Siva Rajamani", role: "CEO", owner: "Pooja", region: "US", retainer: "$700/mo", status: "No data", qc: "0/12" }
     ];
 
     const contentTrackerClients = [
@@ -264,8 +262,7 @@
       { id: "aakash", name: "Aakash Kandoi", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Tue", "Thu", "Fri"] },
       { id: "kelly", name: "Kelly McGuire", owner: "Pooja", target: 2, service: "LinkedIn", days: ["Tue", "Thu"] },
       { id: "mike", name: "Mike Groeneveld", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
-      { id: "siva", name: "Siva Rajamani", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
-      { id: "workspace", name: "Workspace", owner: "Tanisha", target: 2, service: "Newsletter / blog / LinkedIn", days: ["Tue", "Fri"] }
+      { id: "siva", name: "Siva Rajamani", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] }
     ];
 
     const trackerMonths = [
@@ -421,12 +418,12 @@
       document.getElementById("agency").innerHTML = `
         <div class="topbar">
           <div><h1>Agency Cockpit</h1><p class="sub">Internal view for Pooja and Tanisha only.</p></div>
-          <div class="meta"><span class="pill green">9 active clients</span><span class="pill">Pooja: 7</span><span class="pill">Tanisha: 2</span></div>
+          <div class="meta"><span class="pill green">8 active clients</span><span class="pill">Pooja: 7</span><span class="pill">Tanisha: 1</span></div>
         </div>
         <div class="grid grid-4" style="margin:24px 0">
           ${kpi("Monthly USD", "$5,464", "From 6 USD retainers")}
-          ${kpi("Monthly INR", "Rs. 188K", "From India + local retainers")}
-          ${kpi("Total clients", "9", "Visible in local build", "green")}
+          ${kpi("Monthly INR", "Rs. 103K", "From India + local retainers")}
+          ${kpi("Total clients", "8", "Visible in local build", "green")}
           ${kpi("Reports ready", "3/3", "Jose package complete", "amber")}
         </div>
         <section class="card">
@@ -434,7 +431,7 @@
           ${rows}
         </section>
         <div class="grid grid-2">
-          <section class="card"><h2>Workload Split</h2><div class="role-row"><strong>Pooja</strong><div class="bar"><span style="width:78%"></span></div><strong>7</strong></div><div class="role-row"><strong>Tanisha</strong><div class="bar"><span style="width:22%"></span></div><strong>2</strong></div></section>
+          <section class="card"><h2>Workload Split</h2><div class="role-row"><strong>Pooja</strong><div class="bar"><span style="width:88%"></span></div><strong>7</strong></div><div class="role-row"><strong>Tanisha</strong><div class="bar"><span style="width:12%"></span></div><strong>1</strong></div></section>
           <section class="card"><h2>Quick Actions</h2><div class="report-hub"><button class="btn" onclick="show('collector')">LinkedIn Collector</button><button class="btn" onclick="show('tracker')">Content Tracker</button><button class="btn primary" onclick="openClient('jose')">Open Jose</button></div><p class="note">This is now the monthly control room: agency overview first, content tracking second, client month pages third.</p></section>
         </div>`;
     }

@@ -232,6 +232,7 @@
       <button class="nav" data-client="aakash"><span class="dot"></span><span>Aakash Kandoi</span><small>-</small></button>
       <button class="nav" data-client="kelly"><span class="dot"></span><span>Kelly</span><small>-</small></button>
       <button class="nav" data-client="mike"><span class="dot"></span><span>Mike</span><small>-</small></button>
+      <button class="nav" data-client="siva"><span class="dot"></span><span>Siva Rajamani</span><small>-</small></button>
       <button class="nav" data-client="workspace"><span class="dot"></span><span>Workspace</span><small>-</small></button>
     </aside>
     <main>
@@ -246,22 +247,24 @@
     const clients = [
       { id: "nick", name: "Nick Turner", role: "CEO - Dreamdata", owner: "Pooja", region: "US", retainer: "$1,249/mo", status: "Ready", qc: "9/12" },
       { id: "zachary", name: "Zachary Perl", role: "Founder - dotfun", owner: "Tanisha", region: "US", retainer: "$1,700/mo", status: "Ready", qc: "9/12" },
-      { id: "jose", name: "Jose Aleman", role: "Founder", owner: "Pooja", region: "US", retainer: "Rs. 38,000/mo", status: "Ready", qc: "6/6" },
+      { id: "jose", name: "Jose Aleman", role: "VP of RevOps & GTM", owner: "Pooja", region: "US", retainer: "$800/mo", status: "Ready", qc: "6/11" },
       { id: "kashyap", name: "Kashyap Pavra", role: "Founder & CEO - SimplSo", owner: "Pooja", region: "UAE", retainer: "Rs. 55,000/mo", status: "No data", qc: "0/8" },
       { id: "aakash", name: "Aakash Kandoi", role: "Managing Director - Jagdish Farshan", owner: "Pooja", region: "India", retainer: "Rs. 48,000/mo", status: "No data", qc: "0/12" },
-      { id: "kelly", name: "Kelly", role: "Founder", owner: "Pooja", region: "US", retainer: "Rs. 38,000/mo", status: "No data", qc: "0/6" },
-      { id: "mike", name: "Mike", role: "Founder", owner: "Pooja", region: "US", retainer: "Rs. 45,000/mo", status: "No data", qc: "0/6" },
+      { id: "kelly", name: "Kelly McGuire", role: "VP of Customer Success", owner: "Pooja", region: "US", retainer: "$465/mo", status: "No data", qc: "0/8" },
+      { id: "mike", name: "Mike Groeneveld", role: "SVP of Global Sales", owner: "Pooja", region: "US", retainer: "$550/mo", status: "No data", qc: "0/12" },
+      { id: "siva", name: "Siva Rajamani", role: "CEO", owner: "Pooja", region: "US", retainer: "$700/mo", status: "No data", qc: "0/12" },
       { id: "workspace", name: "Workspace", role: "Brand", owner: "Tanisha", region: "India", retainer: "Rs. 85,000/mo", status: "No data", qc: "0/6" }
     ];
 
     const contentTrackerClients = [
       { id: "nick", name: "Nick Turner", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
       { id: "zachary", name: "Zachary Perl", owner: "Tanisha", target: 3, service: "LinkedIn + blog", days: ["Mon", "Wed", "Fri"] },
-      { id: "jose", name: "Jose Aleman", owner: "Pooja", target: 2, service: "LinkedIn", days: ["Tue", "Thu"] },
+      { id: "jose", name: "Jose Aleman", owner: "Pooja", target: 2, service: "LinkedIn + 3 articles/mo", days: ["Tue", "Thu"] },
       { id: "kashyap", name: "Kashyap Pavra", owner: "Pooja", target: 2, service: "LinkedIn", days: ["Mon", "Thu"] },
       { id: "aakash", name: "Aakash Kandoi", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Tue", "Thu", "Fri"] },
-      { id: "kelly", name: "Kelly", owner: "Pooja", target: 2, service: "LinkedIn", days: ["Tue", "Thu"] },
-      { id: "mike", name: "Mike", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
+      { id: "kelly", name: "Kelly McGuire", owner: "Pooja", target: 2, service: "LinkedIn", days: ["Tue", "Thu"] },
+      { id: "mike", name: "Mike Groeneveld", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
+      { id: "siva", name: "Siva Rajamani", owner: "Pooja", target: 3, service: "LinkedIn", days: ["Mon", "Wed", "Fri"] },
       { id: "workspace", name: "Workspace", owner: "Tanisha", target: 2, service: "Newsletter / blog / LinkedIn", days: ["Tue", "Fri"] }
     ];
 
@@ -418,12 +421,12 @@
       document.getElementById("agency").innerHTML = `
         <div class="topbar">
           <div><h1>Agency Cockpit</h1><p class="sub">Internal view for Pooja and Tanisha only.</p></div>
-          <div class="meta"><span class="pill green">8 active clients</span><span class="pill">Pooja: 6</span><span class="pill">Tanisha: 2</span></div>
+          <div class="meta"><span class="pill green">9 active clients</span><span class="pill">Pooja: 7</span><span class="pill">Tanisha: 2</span></div>
         </div>
         <div class="grid grid-4" style="margin:24px 0">
-          ${kpi("Monthly USD", "$2,949", "From 2 US clients")}
-          ${kpi("Monthly INR", "Rs. 509K", "From India + local retainers")}
-          ${kpi("Total clients", "8", "Visible in local build", "green")}
+          ${kpi("Monthly USD", "$5,464", "From 6 USD retainers")}
+          ${kpi("Monthly INR", "Rs. 188K", "From India + local retainers")}
+          ${kpi("Total clients", "9", "Visible in local build", "green")}
           ${kpi("Reports ready", "3/3", "Jose package complete", "amber")}
         </div>
         <section class="card">
@@ -431,7 +434,7 @@
           ${rows}
         </section>
         <div class="grid grid-2">
-          <section class="card"><h2>Workload Split</h2><div class="role-row"><strong>Pooja</strong><div class="bar"><span style="width:75%"></span></div><strong>6</strong></div><div class="role-row"><strong>Tanisha</strong><div class="bar"><span style="width:25%"></span></div><strong>2</strong></div></section>
+          <section class="card"><h2>Workload Split</h2><div class="role-row"><strong>Pooja</strong><div class="bar"><span style="width:78%"></span></div><strong>7</strong></div><div class="role-row"><strong>Tanisha</strong><div class="bar"><span style="width:22%"></span></div><strong>2</strong></div></section>
           <section class="card"><h2>Quick Actions</h2><div class="report-hub"><button class="btn" onclick="show('collector')">LinkedIn Collector</button><button class="btn" onclick="show('tracker')">Content Tracker</button><button class="btn primary" onclick="openClient('jose')">Open Jose</button></div><p class="note">This is now the monthly control room: agency overview first, content tracking second, client month pages third.</p></section>
         </div>`;
     }

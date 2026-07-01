@@ -476,7 +476,7 @@
       }
       trackerSyncStatus = location.protocol === "file:" ? "Saved on this device only" : "Saving shared tracker...";
       renderTracker();
-      await saveTrackerState();
+      await saveTrackerTick(key, checked);
     }
     function setTrackerMonth(monthId) {
       activeTrackerMonth = monthId;
@@ -520,6 +520,23 @@
           body: JSON.stringify({ state: trackerState })
         });
         if (!response.ok) throw new Error("Tracker save failed");
+        trackerSyncStatus = "Shared online tracker";
+      } catch (error) {
+        trackerSyncStatus = "Could not sync. Saved on this device for now.";
+      }
+      renderTracker();
+    }
+    async function saveTrackerTick(key, checked) {
+      if (location.protocol === "file:") return;
+      try {
+        const response = await fetch("/api/tracker/tick", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ key, checked })
+        });
+        if (!response.ok) throw new Error("Tracker tick save failed");
+        const data = await response.json();
+        trackerState = data.state || trackerState;
         trackerSyncStatus = "Shared online tracker";
       } catch (error) {
         trackerSyncStatus = "Could not sync. Saved on this device for now.";

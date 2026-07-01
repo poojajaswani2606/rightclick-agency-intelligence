@@ -228,7 +228,7 @@
       <button class="nav" data-client="nick"><span class="dot live"></span><span>Nick Turner</span><small>May</small></button>
       <button class="nav" data-client="zachary"><span class="dot live"></span><span>Zachary Perl</span><small>May</small></button>
       <button class="nav" data-client="jose"><span class="dot live"></span><span>Jose Aleman</span><small>May</small></button>
-      <button class="nav" data-client="kashyap"><span class="dot"></span><span>Kashyap Pavra</span><small>-</small></button>
+      <button class="nav" data-client="kashyap"><span class="dot live"></span><span>Kashyap Pavra</span><small>June</small></button>
       <button class="nav" data-client="aakash"><span class="dot"></span><span>Aakash Kandoi</span><small>-</small></button>
       <button class="nav" data-client="kelly"><span class="dot"></span><span>Kelly</span><small>-</small></button>
       <button class="nav" data-client="mike"><span class="dot"></span><span>Mike</span><small>-</small></button>
@@ -249,7 +249,7 @@
       { id: "nick", name: "Nick Turner", role: "CEO - Dreamdata", owner: "Pooja", region: "US", retainer: "$1,249/mo", status: "Ready", qc: "9/12" },
       { id: "zachary", name: "Zachary Perl", role: "Founder - dotfun", owner: "Tanisha", region: "US", retainer: "$1,700/mo", status: "Ready", qc: "9/12" },
       { id: "jose", name: "Jose Aleman", role: "VP of RevOps & GTM", owner: "Pooja", region: "US", retainer: "$800/mo", status: "Ready", qc: "6/11" },
-      { id: "kashyap", name: "Kashyap Pavra", role: "Founder & CEO - SimplSo", owner: "Pooja", region: "UAE", retainer: "Rs. 55,000/mo", status: "No data", qc: "0/8" },
+      { id: "kashyap", name: "Kashyap Pavra", role: "Founder & CEO - SimplSo", owner: "Pooja", region: "UAE", retainer: "Rs. 55,000/mo", status: "Ready", qc: "3/3" },
       { id: "aakash", name: "Aakash Kandoi", role: "Managing Director - Jagdish Farshan", owner: "Pooja", region: "India", retainer: "Rs. 48,000/mo", status: "No data", qc: "0/12" },
       { id: "kelly", name: "Kelly McGuire", role: "VP of Customer Success", owner: "Pooja", region: "US", retainer: "$465/mo", status: "No data", qc: "0/8" },
       { id: "mike", name: "Mike Groeneveld", role: "SVP of Global Sales", owner: "Pooja", region: "US", retainer: "$550/mo", status: "No data", qc: "0/12" },
@@ -409,6 +409,14 @@
           <a class="link-btn" href="reports/jose-aleman-content-performance-all-may-2026.pdf" download>Performance PDF</a>
           <a class="link-btn primary" href="reports/jose-aleman-audience-intelligence-may-2026.pdf" download>Audience PDF</a>
           <a class="link-btn" href="reports/jose-aleman-audience-intelligence-may-2026.xlsx" download>Excel</a>
+        </div>`;
+      }
+      if (clientId === "kashyap") {
+        return `<div class="report-hub">
+          <a class="link-btn" href="https://www.linkedin.com/in/kashyap-pavra/" target="_blank">LinkedIn Profile</a>
+          <a class="link-btn" href="reports/kashyap-pavra-content-performance-june-2026.pdf" download>Performance PDF</a>
+          <a class="link-btn primary" href="reports/kashyap-pavra-audience-intelligence-june-2026.pdf" download>Audience PDF</a>
+          <a class="link-btn" href="reports/kashyap-pavra-audience-intelligence-june-2026.xlsx" download>Excel</a>
         </div>`;
       }
       return `<div class="report-hub"><span class="pill amber">Reports pending or sample data</span></div>`;
@@ -615,12 +623,13 @@
     function renderClient(id) {
       if (id === "jose") return renderJose();
       const client = clients.find(c => c.id === id) || clients[0];
+      const monthLabel = id === "kashyap" ? "June 2026" : "May 2026";
       document.getElementById("client").innerHTML = `
         <div class="topbar">
-          <div><h1>${client.name} · May 2026</h1><p class="sub">${client.role} · Owner: ${client.owner} · ${client.retainer}</p></div>
+          <div><h1>${client.name} · ${monthLabel}</h1><p class="sub">${client.role} · Owner: ${client.owner} · ${client.retainer}</p></div>
           <span class="pill ${client.status === "Ready" ? "green" : "amber"}">${client.qc} QC</span>
         </div>
-        <div class="months"><button class="active">May 2026</button><button>Jun 2026</button></div>
+        <div class="months"><button class="${id === "kashyap" ? "" : "active"}">May 2026</button><button class="${id === "kashyap" ? "active" : ""}">Jun 2026</button></div>
         <section class="card"><h2>${client.name} Dashboard</h2><p class="note">This client page is queued for the new Jose-style redesign. Jose is now the standard template: KPI cards, standout post, full post table, deep strategy, audience tiers, report links and QC.</p>${reportLinks(id)}</section>`;
     }
     function renderJose() {
